@@ -15,7 +15,9 @@
     --background-end-rgb: 0, 0, 0;
   }
 }
-
+html{
+  scroll-behavior: smooth;
+}
 body {
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(
@@ -24,6 +26,9 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
+    user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
 }
 .slide{
   animation-name: sli;
@@ -41,6 +46,7 @@ body {
     opacity:1
   }
 }
+
 
 @keyframes pulse1 {
   0%{
@@ -147,5 +153,59 @@ body {
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+
+
+
+
+
+
+
+.rubik-h{
+  font-family: "Rubik",sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 650;
+  font-style: normal;
+}
+
+
+.rubik-b{
+  font-family: "Rubik",sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 450;
+  font-style: normal;
+}
+.gvr {
+  font-family: "Great Vibes", cursive;
+  font-weight: 600;
+  font-style: normal;
+}
+
+
+
+/* Inner sliding content */
+.slider-track {
+  animation: carslide 2s ease infinite;
+  transition:all 0.5s ease 
+}
+
+/* Pause animation on hover */
+.slider-track:hover {
+  animation-play-state: paused;
+}
+
+/* Keyframes for sliding */
+@keyframes carslide {
+  0% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(-50px);
+  }
+  100%{
+        transform: translateX(0);
+
   }
 }

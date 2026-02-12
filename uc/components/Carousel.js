@@ -52,7 +52,7 @@ function CarouselItem({ item, index, itemWidth, round, trackItemOffset, x, trans
       className={`relative shrink-0 flex flex-col ${
         round
           ? 'items-center justify-center text-center bg-[#f8f7f8] border-0'
-          : 'items-start justify-between bg-[#f5f3f3] border border-[#f0eded] rounded-[12px]'
+          : 'items-center justify-between bg-[#f5f3f3] border border-[#f0eded] rounded-[12px]'
       } overflow-hidden cursor-grab active:cursor-grabbing`}
       style={{
         width: itemWidth,
@@ -63,13 +63,13 @@ function CarouselItem({ item, index, itemWidth, round, trackItemOffset, x, trans
       transition={transition}
     >
       <div className={`${round ? 'p-0 m-0' : 'mb-4 p-5'}`}>
-        <span className="flex h-[28px] w-[28px] items-center justify-center rounded-full bg-[#f2f1f3]">
+        <div className="flex flex-row mx-auto w-full  items-center justify-center  bg-transparent">
           {item.icon}
-        </span>
+        </div>
       </div>
-      <div className="p-5">
-        <div className="mb-1 font-black text-lg text-orange-600">{item.title}</div>
-        <p className="text-sm text-orange-400">{item.description}</p>
+      <div className="p-5 text-center w-full">
+        <div className="mb-1 font-black text-lg text-center text-orange-500">{item.title}</div>
+        <p className="text-sm text-center text-orange-400">{item.description}</p>
       </div>
     </motion.div>
   );
