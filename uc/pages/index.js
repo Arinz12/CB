@@ -76,7 +76,7 @@ const Index=()=>{
 {/* <customer testimonies> */}
     <p className="text-4xl text-center mt-12 md:text-7xl gvr mb-6 text-orange-500 font-bold">Customers' Testimonies</p>
     
-    <div className=" overflow-hidden relative   mt-6  bg-transparent flex flex-row ">
+    <div  className=" overflow-y-auto overflow-hidden  relative   mt-6  bg-transparent flex flex-row ">
 
 <div style={{height:'200px',textAlignLast:'center'}} className="w-11/12 md:w-3/12 bg-white  p-3 mx-4  flex-shrink-0  text-xl rounded-xl flex justify-center items-center    text-orange-400 rubik-b ">
 'The perfume was so nice and long lasting and I recommend uc perfumes'
