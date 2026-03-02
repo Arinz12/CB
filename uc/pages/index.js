@@ -7,6 +7,8 @@ import Image from "next/image"
 import Carousel from "@/components/Carousel"
 import InstagramIcon from '@mui/icons-material/Instagram';
 import XIcon from '@mui/icons-material/X';
+import { useRef } from "react"
+import { headers } from "@/next.config"
   const newItems=[
     {
  title: "'MEN's SPECIAL'",
@@ -27,8 +29,25 @@ import XIcon from '@mui/icons-material/X';
     icon: <Image width={200} priority={true} height={400} src="/perf.png" />
     },
   ]
+  
+
 
 const Index=()=>{
+  const email=useRef("")
+
+  async function sub(){
+  console.log("started...")
+  const res = await fetch("https://expert-memory-9774x9pr545ghvx5-3000.app.github.dev/api/subscribe",
+    {method:"post",
+      body:JSON.stringify({email:email.current.value}),
+      headers:{"Content-Type":"application/json"}})
+  if(res.ok){
+    console.log("email saved")
+  }
+  else{
+    console.log("email not saved")
+  }
+}
   return(
     <>
     <Head>
@@ -100,8 +119,8 @@ const Index=()=>{
 
 <div className="flex flex-col gap-5 justify-center items-center">
  <p className="rubik-b">Subscribe to our Email Newsletter</p>
-  <input  className=' text-black border-2 focus:outline-none rounded-md p-4 border-orange-200' type="email" placeholder="example@gmail.com"/>
-  <button className="rubik-b text-orange-300 bg-black p-3 rounded-md">Subscribe</button>
+  <input ref={email}  className=' text-black border-2 focus:outline-none rounded-md p-4 border-orange-200' type="email" placeholder="example@gmail.com"/>
+  <button onClick={sub} className="rubik-b text-orange-300 bg-black p-3 rounded-md">Subscribe</button>
 </div>
 
 <div  className='p-5  ml-1 mr-1 md:grid md:grid-cols-4 flex justify-center justify-self-start items-center gap-12 flex-col text-white bg-black mt-9  rounded-t-lg'>

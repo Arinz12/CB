@@ -209,3 +209,22 @@ body {
 
   }
 }
+
+.slide2{
+  animation-name: move;
+  animation-timing-function: ease;
+  animation-duration: 0.8s;
+  animation-delay: 0s;
+  animation-iteration-count: 1;
+
+}
+@keyframes move {
+  from{
+    opacity:0;
+    transform: translateX(400px);
+  }
+  to{ 
+    opacity:1;
+    transform: translateX(0px);
+  }
+}

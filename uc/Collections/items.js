@@ -11,5 +11,5 @@ const schema=new mongoose.Schema({
     Volume:{type:String,unique:false},
     Availabe:{type:String,unique:false},
 })
-const Items= mongoose.models.perfumes|| mongoose.model("Items",schema)
+const Items= mongoose.models.Items|| mongoose.model("Items",schema)
 module.exports=Items;
