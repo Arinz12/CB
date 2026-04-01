@@ -27,7 +27,7 @@ const About=()=>{
         <div className="text-center p-5 flex flex-col-reverse items-center justify-between md:flex-row mt-12">
 <div className=" md:max-w-96">
         <p className=" bg-white md:text-7xl gvr text-4xl text-orange-600"><u>About us</u></p>
-        <span className="rubik-b text-orange-400">We are relentless in giving quality we do as we say. Trust us and be satisfied. We make sure to present the best for all tastes</span>
+        <span className="rubik-b text-orange-400">Official Oil Perfume is a fast-growing fragrance brand based in Anambra state, Nigeria. The brand was created to provide affordable luxury perfumes that last long and make people feel confident</span>
 </div>
         <Image className="shrink-0"  priority={true} alt={"perfume"}  width={400} height={300} src={"/perf.png"}/>
 </div>

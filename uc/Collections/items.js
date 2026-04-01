@@ -10,6 +10,7 @@ const schema=new mongoose.Schema({
     Description:{type:String,unique:false},
     Volume:{type:String,unique:false},
     Availabe:{type:String,unique:false},
+    Uid:{type:String,unique:true}
 })
 const Items= mongoose.models.Items|| mongoose.model("Items",schema)
 module.exports=Items;

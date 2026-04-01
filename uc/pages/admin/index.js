@@ -1,130 +1,99 @@
-import { Add } from "@mui/icons-material"
-import { Button } from "@mui/material"
-import { useEffect, useState } from "react"
-import { useRef } from "react"
+import Link from "next/link"
+import InventoryIcon from '@mui/icons-material/Inventory';
 import Head from "next/head"
-const Admin=()=>{
-const [done,setDone]=useState(false)
-const [processing,setPro]=useState(false)
-const [invalid,setInvalid]=useState(true)
-
-const name=useRef(null)
-const longevity=useRef(null)
-const brand=useRef(null)
-const price=useRef(null)
-const description=useRef(null)
-const volume=useRef(null)
-const available=useRef(null)
-const image=useRef(null)
-
-function checkValidityOfInput(){
-if(name.current.value && longevity.current.value && brand.current.value && price.current.value && description.current.value && volume.current.value && available.current.value && image.current.files[0] ){
-    setInvalid(false)
-}
-else{
-    setInvalid(true)
-}
-}
-
-async function additem(){
-    setInvalid(true);// disables the submit button
-    setPro(true)
-    const formdata= new FormData()
-    formdata.append("name",name.current.value )
-        formdata.append("longevity",longevity.current.value )
-    formdata.append("brand",brand.current.value )
-    formdata.append("price",price.current.value )
-    formdata.append("description",description.current.value )
-    formdata.append("volume",volume.current.value )
-    formdata.append("available",available.current.value )
-    formdata.append("image",image.current.files[0])
-
-    // const data={
-        
-    //     name:name.current.value ,
-    //     longevity:longevity.current.value,
-    //     brand:brand.current.value,
-    //     price:price.current.value,
-    //     description:description.current.value,
-    //     volume:volume.current.value,
-    //     available:available.current.value,
-    // image:image.current.value};
-        
-   try{ const result= await fetch("https://expert-memory-9774x9pr545ghvx5-3000.app.github.dev/api/additem",
-    {method:"post",
-    body:formdata
-});
-    if(result.ok){
-        setPro(false)
-    clear()//clears all input and disables the submit button
-flashNote();
-    }
-    else{
-        setPro(false)
-        throw new Error("error occured")
-    }
-}
-    catch(e){
-console.log("adding failed",e)
-    }
-}
-function flashNote(){
-  setDone(true);
-  setTimeout(()=>{setDone(false)},3000)  
-}
-function clear(){
-    name.current.value="";
-    longevity.current.value="";
-    price.current.value="";
-    brand.current.value="";
-    description.current.value="";
-    volume.current.value="";
-    available.current.value="";
-image.current.value=null;
-setInvalid(true)
-}
-
-
+import { Add, Discount, Search } from "@mui/icons-material"
+const Admin=({users,orders,comOrders,itemCount})=>{
 return (<>
 <Head>
-    <title>Add item</title>
-    <style>{`
-       body{
-        background-color:white !important
+    <title>UC | Admin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Monomaniac+One&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet"/>
+</Head>
+<div style={{height:"100vh"}} className="h-full">
+<div className="rubik-h text-orange-500 text-2xl ml-2 mt-2">Admin Dashboard</div>
 
-       }
-       
-       `}
-    </style>
-    </Head>
-<div className="">
-    <p className="text-xl rubik-h text-left text-orange-400  p-5">ADD AN ITEM</p>
-<div style={{backgroundColor:"rgb(214, 219, 220)"}} className="relative w-11/12 mx-auto p-4 py-6 rounded-md gap-5 justify-center items-center flex flex-col">
-<span onClick={clear} className="absolute rubik-b text-orange-500 -top-5 right-2">Clear All</span>
-<label className="font-semibold rubik-b">Name: <input onChange={checkValidityOfInput} className="p-3 focus:outline-orange-300 rounded-sm" type="text" ref={name}/></label>
-
-<div className="flex flex-row justify-between items-center w-full py-1">
-<label className="font-semibold rubik-b">Longevity: <input onChange={checkValidityOfInput} className="p-3 w-16 rounded-sm" type="text" placeholder="24hrs" ref={longevity}/></label>
-<label className="font-semibold rubik-b">Price: <input onChange={checkValidityOfInput} className="p-3 w-20 rounded-sm" placeholder={"5000"} type="number" inputMode="numeric" ref={price}/></label></div>
-
-<label className="font-semibold rubik-b">Brand: <input onChange={checkValidityOfInput} className="p-3 rounded-sm" type="text" ref={brand}/></label>
-
-<label className="font-semibold rubik-b">Description:<textarea onChange={checkValidityOfInput} className="p-3 rounded-sm" placeholder="This is very great for children" type="text" ref={description}/></label>
-<div className="flex flex-row justify-between items-center w-full py-1">
-
-<label className="font-semibold rubik-b">Volume: <input onChange={checkValidityOfInput} className="p-3  w-16 rounded-sm" placeholder="24mg" type="text" ref={volume}/></label>
-<label className="font-semibold rubik-b">Available: <input onChange={checkValidityOfInput} className="p-3 w-16  rounded-sm" placeholder="20" type="number" inputMode="numeric" ref={available}/></label>
+<div className="flex-row flex justify-center mb-10 mt-10 gap-6">
+<div style={{fontSize:"20px"}} className="p-5 text-black font-bold bg-white mx-2 rounded-md rubik-b ">Registered Users: {users}</div>
+<div style={{fontSize:"20px"}} className="p-5 text-black font-bold bg-white mx-2 rounded-md rubik-b ">Orders: {orders}</div>
 </div>
-<label className="font-semibold rubik-b">Upload item image<input onChange={checkValidityOfInput} p-4 text-orange-400 ref={image} multiple  type="file"/></label>
-<Button disabled={invalid} onClick={additem} sx={{backgroundColor:"#FDBA74"}} endIcon={<Add/>} variant="contained" className="w-10/12 ">{processing? "Adding...":"Add"}</Button>
+
+<div className="flex-row flex justify-center mb-10 mt-10 gap-1">
+<div style={{fontSize:"20px"}} className="py-3 px-2 flex flex-col text-black  bg-white mx-2 rounded-md rubik-b ">
+   <span> Items: {itemCount}</span>
+   
+
+        {/* <Link href="/admin/search" className="text-orange-500" style={{fontSize:"15px"}}>Find item</Link>
+        <Link href="/products" className="text-orange-500" style={{fontSize:"15px"}}>view items</Link> */}
+
+    </div>
+<div style={{fontSize:"20px"}} className="p-4 text-black bg-white mx-2 rounded-md rubik-b ">Payments receieved: {0}</div>
+</div>
+
+<div className="flex-col flex justify-center gap-6">
+<div  className="p-3 rounded-md text-black flex flex-row justify-between items-center bg-white mx-2 rubik-b ">
+   <span style={{fontSize:"20px"}}> Resolved Orders: {comOrders}</span>
+   <Link href="/" className="text-orange-500" style={{fontSize:"15px"}}>view</Link>
+    </div>
+    <div  className="p-3 rounded-md text-black flex flex-row justify-between items-center bg-white mx-2 rubik-b ">
+   <span style={{fontSize:"20px"}}> Pending Orders: {orders}</span>
+   <Link href="/admin/processing" className="text-orange-500" style={{fontSize:"15px"}}>view</Link>
+    </div>
+</div>
+
+<div className="grid grid-cols-3 justify-center items-center relative mx-2 bg-white mt-4 rounded-md p-5">
+    <div className="absolute top-1 left-1  text-orange-400 rubik-b">More Actions</div>
+    <div className="p-3 flex flex-col justify-center items-center">
+    <Add sx={{color:"#f97316"}}/>
+    <Link href="/admin/additem" className="text-orange-500 rubik-b" style={{fontSize:"15px"}}>Add item</Link>
     </div>
 
-   {done && <div className="z-50 slide fixed top-3 text-orange-500 rubik-b left-1 bg-white rounded-md p-4">
-    An item has been successfully added
-    </div>}
+    <div className="p-3  flex flex-col justify-center items-center">
+    <Search sx={{color:"#f97316"}}/>
+    <Link href="/admin/search" className="text-orange-500 rubik-b" style={{fontSize:"15px"}}>find item</Link>
+    </div>
 
+    <div className="p-3  flex flex-col justify-center items-center">
+    <InventoryIcon sx={{color:"#f97316"}}/>
+    <Link href="/products" className="text-orange-500 rubik-b" style={{fontSize:"15px"}}>products</Link>
+    </div>
+
+     <div className="p-3  flex flex-col justify-center items-center">
+    <Discount sx={{color:"#f97316"}}/>
+    <Link href="/admin/discount" className="text-orange-500  rubik-b" style={{fontSize:"15px"}}>Discount</Link>
+    </div>
+    </div>
 </div>
-</>
-)
+
+</>)
 }
 export default Admin
+export async function getServerSideProps(context){
+if(!context.req.isAuthenticated()||!context.req.user.Admin){
+    return{
+        redirect:{
+            destination:"/product",
+            permanent:false
+        }
+    }
+}
+    const User=require("@/Collections/users")
+    // get all registered users
+const regUsers=await User.countDocuments()
+// get all orders that have been placed
+const Order=require("@/Collections/orders")
+    const orders= await Order.countDocuments({
+    Status:"pending"})
+//get orders that has been completed
+const comOrders= await User.countDocuments({
+    Cart: {$elemMatch: {Status:"done"}}
+})
+const Items=require("@/Collections/items")
+const itemCount=await Items.countDocuments()
+// console.log(regUsers)
+return{
+    props:{users:regUsers,orders,comOrders,itemCount}
+}
+
+}

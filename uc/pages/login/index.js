@@ -1,13 +1,36 @@
 import { Button } from "@mui/material"
 import Head from "next/head"
 import Link from "next/link"
-import { useRef } from "react"
+import { useRef,useState } from "react"
 
 const Login=()=>{
-    
+    const [failed,setFailed]=useState(false)
 //     async function submit(){
 // const res=await fetch("/login",{method:"post",body:JSON.stringify({email,password:pass}),headers:{"Content-Type":"application/json"}})
 //     }
+const val= async (e)=>{
+    e.preventDefault();
+    console.log("entered")
+       try{
+        const exist= await fetch("https://expert-memory-9774x9pr545ghvx5-3000.app.github.dev/api/valUser",
+        {method:"post",body:JSON.stringify({email:document.getElementsByName("email")[0].value.trim().toLowerCase() ,password:document.getElementsByName("password")[0].value.trim()}),headers:{"Content-Type":"application/json"}});
+      if(!exist.ok){
+setFailed(true);
+      setTimeout(()=>{setFailed(false)
+    },3000)
+      console.log("You are not in")
+      return
+      }
+      e.target.submit();
+      console.log("you are in...")
+      return
+      }
+
+    catch(er){
+        er.preventDefault()
+        console.log("connect to the internet")
+    }}
+
     return (
         <>
         <Head>
@@ -21,8 +44,12 @@ const Login=()=>{
         <div style={{height:"100vh"}} className="md:flex-row md:ml-4 overflow-hidden relative flex md:justify-between items-center">
             <div className="gvr absolute top-1  right-2 text-orange-500  text-2xl ">UC PERFUME</div>
 
+            {failed && <div className="bg-white rounded text-center absolute top-1 left-1 slide  p-5">
+    <span className="text-red-500 rubik-b">wrong credentials provided</span>
+</div>}
+
             {/* form */}
-<form action={"https://expert-memory-9774x9pr545ghvx5-3000.app.github.dev/login"} method="post" autoComplete="off">
+<form action={"https://expert-memory-9774x9pr545ghvx5-3000.app.github.dev/login"} method="post" onSubmit={val} autoComplete="off">
             <div className="p-4 rounded-sm overflow-hidden  flex flex-col slide2 gap-5">
                 <span className="text-orange-500 text-xl rubik-h">Login</span>
 {/* <label>Username:  <input className="p-3 rounded focus:outline-none text-black rubik-b" type="text" placeholder="John"/></label> */}

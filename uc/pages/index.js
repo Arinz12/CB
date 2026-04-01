@@ -74,7 +74,7 @@ const Index=()=>{
 <Image className="animate-pulse1 reveal" priority={true} alt={"perfume"}  width={400} height={300} src={"/perf.png"}/>
 <div className="md:flex md:bg-transparent overflow-hidden  bg-black/50 flex rounded-md md:static   w-full left-0  absolute top-0 h-full  flex-col gap-7  justify-center items-center">
       <div className="text-white text-3xl rubik-b slide">STRONG AND LASTING FRAGRANCE FOR EVERYONE</div>
-      <Button href="/usertype" sx={{backgroundColor:"black",color:"#FDBA74"}}  variant="contained" endIcon={<ArrowForwardIosRounded/>} className="cta mx-auto slide  w-30">Shop now</Button>
+      <Button href="/usertype" sx={{backgroundColor:"black",color:"#FDBA74"}}  variant="contained" endIcon={<ArrowForwardIosRounded/>} className="cta mx-auto slide  w-30">Explore now</Button>
 </div></div>
     </div>
     <div className=" mx-auto mt-3 md:flex md:flex-row md:justify-center md:items-center md:gap-16 flex flex-col justify-center items-center gap-2 text-center">
@@ -124,7 +124,8 @@ const Index=()=>{
 </div>
 
 <div  className='p-5  ml-1 mr-1 md:grid md:grid-cols-4 flex justify-center justify-self-start items-center gap-12 flex-col text-white bg-black mt-9  rounded-t-lg'>
-    <div className="rubik-b text-center" style={{textAlignLast:"center",maxWidth:"400px"}}>At uc perfume store we make the purchase of perfumes seamless using our digital processess to make it happen</div>
+    <div className="rubik-b text-center" style={{textAlignLast:"center",maxWidth:"400px"}}>
+      Official Oil Perfume is a premium fragrance brand dedicated to provide long-lasting and high-quality oil perfumes for men and women. Our perfumes are carefully selected to give you confidence, elegance, and a memorable scent wherever you go.</div>
     <div className='flex flex-col'>
       <h3 className='rubik-h text-center'style={{fontSize:"17px"}}>Company</h3>
       <Button sx={{color:"#FDBA74"}} href='/about' className=" text-orange-300 text-center">About us</Button>
