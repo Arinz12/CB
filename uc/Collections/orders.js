@@ -14,6 +14,8 @@ const schema=new mongoose.Schema({
     Status:{type:String,default:"pending"
     },
     Total:{type:Number},
+    Address:{type:String},
+    State:{type:String},
     Date:{type:String}
 })
 const Order= mongoose.models.Order|| mongoose.model("Order",schema)

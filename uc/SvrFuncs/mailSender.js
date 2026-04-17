@@ -1,15 +1,16 @@
 require("dotenv").config()
-function sendEmailAdmin(message,emaill){
+function sendd(emaill,messagee,htmll,sub){
   const nodemailer = require('nodemailer');
   
   // Create a transporter object using SMTP transport
   let transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com', // Replace with your SMTP server hostname
+    host: 'smtp.zoho.com', // Replace with your SMTP server hostname
     port: 465, // Replace with the appropriate port number
+    secure: true, // false for TLS - as a boolean not string - but the default is false so just remove this completely
     auth: {
       type:'Login' ,
-      user: 'arizegift1432@gmail.com', // Replace with your email address
-      pass: process.env.PASSM
+      user: 'support@billsly.co', // Replace with your email address
+      pass: process.env.PASS
        // Replace with your email password or app-specific password
     },
     tls: {
@@ -19,13 +20,21 @@ function sendEmailAdmin(message,emaill){
   });
   let mailOptions ;
   // Define email options
-     mailOptions = {
-      from: '"D&G SIGNATURE" arizegift1432@gmail.com', // Sender address
+  if (messagee==undefined){
+    mailOptions = {
+      from: '"D&G Signature" arizegift1432@gmail.com', // Sender address
       to: emaill, // List of recipients
-      subject: "D&G New Order", // Subject line
-      html: message, // Plain text body
+      subject: sub, // Subject line
+      html: htmll, // Plain text body
     };
-  
+  }else{
+     mailOptions = {
+      from:'"D&G Signature" arizegift1432@gmail.com', // Sender address
+      to: emaill, // List of recipients
+      subject: sub, // Subject line
+      text: messagee, // Plain text body
+    };
+  }
   
   // Send email
   transporter.sendMail(mailOptions, (error, info) => {
@@ -38,4 +47,4 @@ function sendEmailAdmin(message,emaill){
   });
   }
 
-  module.exports= sendEmailAdmin
+  module.exports= sendd

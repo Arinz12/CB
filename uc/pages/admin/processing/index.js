@@ -42,7 +42,13 @@ const processing=({items})=>{
             )
         })
       }
+
+            <div>Address: {a.Address}</div>
+            <div>State: {a.State}</div>
+
+
       <div>Total: {a.Total.toLocaleString()}</div>
+
       <div>Date: {a.Date}</div>
 
         </div>)

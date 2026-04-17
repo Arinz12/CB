@@ -22,6 +22,9 @@ const cookieParser = require('cookie-parser');
 const User = require("./Collections/users");
 const Order = require("./Collections/orders");
 const sendEmailAdmin = require("./SvrFuncs/notify");
+const sendd = require("./SvrFuncs/mailSender");
+const { Flid, updateFlid } = require("./Collections/FlutterwaveIds");
+const vet = require("./SvrFuncs/verifyT");
 
 
 
@@ -323,32 +326,255 @@ console.log("AN error occured",e)
   return res.status(400).end()
   }
 })
+
+
+//confirm payment webhook
+
+server.post("/done",cors(),async (req,res)=>{
+  console.log("done path has been entered")
+  // Here req.body.data is ued to check requests coming from outside Billsly frontend
+  // console.log(req);
+//check if request came from a webhook
+  if(req.body.data&&!req.isAuthenticated()){
+    console.log("request came from a webhook flutterwave to be supposed")
+  if((req.headers["verif-hash"]!=="ariwa"||!req.headers["verif-hash"])){
+    console.log("correct header was not passed");
+    return res.status(200).end()
+  }}
+  //handle failed transactions
+  if(req.body.data&&!req.isAuthenticated()){
+  if(req.body.data.status!="successful"){
+    sendd("igwebuikea626@gmail.com",`This order txn failed for ${req.body.data.customer.email}`,undefined,"order Failure")
+return res.status(200).end()
+  }} 
+  else{
+    if(!req.isAuthenticated()){
+      return res.end()}
+  }
+  let userEmail;
+      userEmail= (req.isAuthenticated())? req.user.Email : req.body.data.customer.email
+  let tx_ref;
+  let transaction_id;
+  let usernow;
+  if(!req.isAuthenticated()){
+   usernow=await User.findOne({Email:req.body.data.customer.email})}
+   console.log("USERPASSPORT",usernow)
+  const Id = (req.isAuthenticated())? mongoose.Types.ObjectId(req.user._id): usernow._id;
+  console.log(Id)
+  if(req.body.data&&!req.isAuthenticated()){
+    tx_ref=req.body.data.tx_ref;
+    transaction_id= req.body.data.id;
+  }else{
+   tx_ref=req.body.tx_ref;
+ transaction_id= req.body.transaction_id;}
+  console.log(tx_ref)
+  //check if id has been verified before.
+  let flidObj;
+  flidObj=await Flid.findOne({Customer:userEmail})
+  if(!flidObj){
+    await Flid.create({
+      Customer:userEmail,
+      Ids:[]
+  })
+  console.log(userEmail+" "+"history id has been created")
+  }
+  flidObj=await Flid.findOne({Customer:userEmail})
+  if(flidObj.Ids.includes(transaction_id)){
+    console.log("This transaction has already been settled")
+    sendd("igwebuikea626@gmail.com","An already verified txn_id  attempted to be verified",undefined,"Duplicate pay-ver alert")
+   return  res.status(200).json({message:"this transaction has alrady been settled"})
+  }
+  console.log(transaction_id)
+    try{
+     const resss= await vet(tx_ref,transaction_id,Id,userEmail);
+     if(resss=="success"){
+                await  updateFlid(userEmail,transaction_id);
+
+    console.log("oredr completed")
+  res.status(200).json({message:"Payment successfull"})}
+  else{
+        res.status(500).json({message:"payment failed..."})
+
+  }
+  }
+  catch(e){
+console.log("Error caught...",e)
+    res.status(500).json({message:"payment failed..."})
+  } 
+  
+})
 //place an order after payment has been confirmed
+
+
 server.post("/order",cors(),async (req,res)=>{
   console.log("order receieved...")
-  const {productId,quantity,total}=req.body
-  console.log(productId,quantity)
-await Order.updateOne({User:req.user.Email},
+  const id=Math.random().toString(36).substring(2, 11);
+  const {productInfo,state,address,user,phone}=req.body
+  //create message
+   const message= `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>New Order Notification</title>
+      <style>
+        body {
+          font-family: Arial, sans-serif;
+          line-height: 1.6;
+          color: #333;
+          margin: 0;
+          padding: 0;
+        }
+        .container {
+          max-width: 600px;
+          margin: 20px auto;
+          padding: 20px;
+          border: 1px solid #ddd;
+          border-radius: 8px;
+          background-color: #f9f9f9;
+        }
+        .header {
+          background-color: #f97316;
+          color: white;
+          padding: 15px;
+          text-align: center;
+          border-radius: 5px;
+          margin-bottom: 20px;
+        }
+        .order-details {
+          background-color: white;
+          padding: 20px;
+          border-radius: 5px;
+          margin-bottom: 20px;
+        }
+        .detail-row {
+          margin-bottom: 12px;
+          padding-bottom: 12px;
+          border-bottom: 1px solid #eee;
+        }
+        .label {
+          font-weight: bold;
+          display: inline-block;
+          width: 120px;
+          color: #555;
+        }
+        .value {
+          display: inline-block;
+          color: #333;
+        }
+        .footer {
+          text-align: center;
+          font-size: 12px;
+          color: #777;
+          margin-top: 20px;
+          padding-top: 10px;
+          border-top: 1px solid #ddd;
+        }
+        .badge {
+          display: inline-block;
+          background-color: #4CAF50;
+          color: white;
+          padding: 3px 8px;
+          border-radius: 3px;
+          font-size: 12px;
+        }
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <div class="header">
+          <h2>🛒 New Order Received!</h2>
+          <p>OrderId ${id}</p>
+        </div>
+        
+        <div class="order-details">
+          <h3>Order Details</h3>
+          
+          <div class="detail-row">
+            <span class="label">Order ID:</span>
+            <span class="value">${id}</span>
+          </div>
+          
+          <div class="detail-row">
+            <span class="label">Customer Email:</span>
+            <span class="value">${user}</span>
+          </div>
+          
+          <div class="detail-row">
+            <span class="label">Phone Number:</span>
+            <span class="value">${phone}</span>
+          </div>
+          
+          <div class="detail-row">
+            <span class="label">Order Date:</span>
+            <span class="value">${DateTime.local().setZone("Africa/Lagos").toFormat('LLLL dd, yyyy')}</span>
+          </div>
+          
+          <div class="detail-row">
+            <span class="label">Delivery Location:</span>
+            <span class="value">${address}</span>
+          </div>
+
+          <div class="detail-row">
+            <span class="label">Delivery State:</span>
+            <span class="value">${state}</span>
+          </div>
+          
+          
+            <div class="detail-row">
+              <span class="label">Items:</span>
+              <span class="value"><b>
+                ${productInfo.map(item => `${item.productId} x${item.quantity}`).join('<br />')}</b>
+              </span>
+            </div>
+         
+          
+          
+            <div class="detail-row">
+              <span class="label">Total Amount:</span>
+              <span class="value"> ${productInfo.reduce((sum, product) => sum + parseInt(product.price), 0)} NGN</span>
+            </div>
+          
+        </div>
+        
+        <div class="footer">
+          <p>This is an automated notification. Please process this order promptly.</p>
+          <p>© ${new Date().getFullYear()} D&G Signature</p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `
+  console.log(productInfo)
+  try{
+for (const a of productInfo){
+await Order.updateOne({User:user,Uid:id},
   {
 $push:{
   Purchase:{
-    Product:productId,Quantity:quantity
+    Product:a.productId,Quantity:a.quantity
   },
   
 },
- $set: {
-      Total: total,
-      Uid:Math.random().toString(36).substring(2, 11),
-      Date:DateTime.local().setZone("Africa/Lagos").toFormat('LLLL dd, yyyy hh:mm a')
- 
-    },
-},{upsert:true}).then(()=>{
-  // sendEmailAdmin()
+ $set: {    
+      Uid:id,
+      Date:DateTime.local().setZone("Africa/Lagos").toFormat('LLLL dd, yyyy hh:mm a'),
+      State:state,
+      Address:address
+   },
+    $inc:{
+Total:a.price
+    }
+},{upsert:true});
+  }
+  sendEmailAdmin(message,"arize1524@gmail.com")
   res.status(200).end("ok")
-}).catch((e)=>{
+}
+catch(e){
   console.log("failed",e)
   res.end()
-})
+}
 })
 //find product
 server.post("/find",async (req,res)=>{
